@@ -11,10 +11,12 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
 
     from gabe_app.routes.auth_routes import auth_bp
     from gabe_app.routes.main_routes import main_bp
+
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
 
-    return app  # ✅ this line must be indented properly
+    return app
