@@ -1,1 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GABE - Your Spiritual Companion</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#8B5CF6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="GABE">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-soft: 0 8px 32px rgba(139, 92, 246, 0.2);
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container-fluid {
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Landing Page Styles */
+        .landing-page {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            background: var(--primary-gradient);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .landing-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="white" stop-opacity="0.1"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient></defs><circle cx="20" cy="20" r="2" fill="url(%23g)"/><circle cx="80" cy="40" r="1.5" fill="url(%23g)"/><circle cx="40" cy="80" r="1" fill="url(%23g)"/><circle cx="90" cy="80" r="1.2" fill="url(%23g)"/><circle cx="10" cy="60" r="0.8" fill="url(%23g)"/></svg>') repeat;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20px) translateX(10px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .start-button {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+        }
+
+        .start-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.3);
+            color: white;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            height: 100vh;
+            background: white;
+        }
+
+        .chat-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .chat-info h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .chat-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #f8fafc;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 20px;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .message.gabe .message-bubble {
+            background: white;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .message.user .message-bubble {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .input-container {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .message-input {
+            flex: 1;
+            border: 1px solid #e2e8f0;
+            border-radius: 25px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .message-input:focus {
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .send-button {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .send-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Spiritual Features */
+        .spiritual-features {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .spiritual-features h3 {
+            color: #4c1d95;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15);
+            border-color: #8B5CF6;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card h4 {
+            color: #4c1d95;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* User Progress */
+        .user-progress {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 1rem;
+            margin: 1rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .xp-display {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .level-info {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .message-bubble {
+                max-width: 85%;
+            }
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Loading States */
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0.5rem;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #8B5CF6;
+            animation: typing 1.5s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus styles */
+        button:focus,
+        input:focus {
+            outline: 2px solid #8B5CF6;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <!-- Landing Page -->
+        <div id="landing-page" class="landing-page">
+            <div class="hero-content">
+                <h1 class="hero-title">GABE</h1>
+                <p class="hero-subtitle">Your AI-powered spiritual companion for daily guidance, prayer, and biblical wisdom</p>
+                <button class="btn start-button" onclick="showAuthModal()" aria-label="Start conversation with GABE">
+                    <i data-feather="message-circle" style="margin-right: 0.5rem;"></i>
+                    Start Your Journey
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div id="chat-container" class="chat-container">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="chat-avatar">✨</div>
+                <div class="chat-info">
+                    <h3>GABE</h3>
+                    <p>Your spiritual companion</p>
+                </div>
+                <div class="ms-auto">
+                    <button class="btn btn-sm" style="color: white; border: 1px solid rgba(255,255,255,0.3);" onclick="showLanding()">
+                        <i data-feather="home" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div id="messages-container" class="messages-container">
+                <!-- Messages will be added here dynamically -->
+            </div>
+
+            <!-- User Progress Display -->
+            <div id="user-progress" class="user-progress" style="display: none;">
+                <div class="xp-display">
+                    <span id="user-xp">0</span> XP
+                </div>
+                <div class="level-info">
+                    <span id="user-level">Seedling</span> • Next: <span id="next-level">Disciple</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="level-progress-bar" class="progress-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Spiritual Features Panel -->
+            <div id="spiritual-features" class="spiritual-features" style="display: none;">
+                <h3><i data-feather="star" style="width: 20px; height: 20px; margin-right: 0.5rem;"></i>Faith in Action</h3>
+                <div class="features-grid">
+                    <div class="feature-card" onclick="openDevotion()">
+                        <div class="feature-icon">🌅</div>
+                        <h4 id="devotion-button-text">Morning Devotion</h4>
+                        <p>Start your day with scripture and prayer</p>
+                    </div>
+                    <div class="feature-card" onclick="openPrayerManager()">
+                        <div class="feature-icon">🙏</div>
+                        <h4>Prayer Center</h4>
+                        <p>Guided prayers and personal requests</p>
+                    </div>
+                    <div class="feature-card" onclick="openBibleReading()">
+                        <div class="feature-icon">📖</div>
+                        <h4>Bible Reading</h4>
+                        <p>Daily scripture with reflection</p>
+                    </div>
+                    <div class="feature-card" onclick="loadUserProgress()">
+                        <div class="feature-icon">⭐</div>
+                        <h4>Your Progress</h4>
+                        <p>Track your spiritual journey</p>
+                    </div>
+                    <div class="feature-card gabefyed-games" onclick="openGamifiedFeatures()">
+                        <div class="feature-icon">🎮</div>
+                        <h4>GABEFYED Games</h4>
+                        <p>Fun spiritual growth activities</p>
+                    </div>
+                    <div class="feature-card" onclick="openPrayerArena()">
+                        <div class="feature-icon">🎯</div>
+                        <h4>Prayer Arena</h4>
+                        <p>Interactive prayer training</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Container -->
+            <div class="input-container">
+                <input 
+                    type="text" 
+                    id="message-input" 
+                    class="message-input" 
+                    placeholder="Share what's on your heart..." 
+                    onkeypress="handleKeyPress(event)"
+                    aria-label="Type your message"
+                >
+                <button 
+                    id="send-button" 
+                    class="send-button" 
+                    onclick="sendMessage()"
+                    aria-label="Send message"
+                >
+                    <i data-feather="send" style="width: 20px; height: 20px;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div id="auth-content">
+                <!-- Auth forms will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- App JavaScript -->
+    <script src="{{ url_for('static', filename='js/simple-app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/gamified-spiritual-features.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/faith-cards-system.js') }}"></script>
+    
+    <script>
+        // Initialize Feather Icons
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+        });
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('{{ url_for("static", filename="sw.js") }}')
+                    .then(function(registration) {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(function(registrationError) {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        // Auth Modal Functions
+        function showAuthModal() {
+            if (window.authenticatedUser) {
+                // User is already authenticated, start chat directly
+                if (window.gabeApp) {
+                    window.gabeApp.userName = window.authenticatedUser.name;
+                    window.gabeApp.userAgeRange = window.authenticatedUser.age_range;
+                    window.gabeApp.userState.name = window.authenticatedUser.name;
+                    window.gabeApp.userState.ageGroup = window.authenticatedUser.age_range;
+                    window.gabeApp.userState.conversationStage = "chat";
+                    window.gabeApp.showChat();
+                }
+            } else {
+                // Show login modal
+                document.getElementById('auth-modal').style.display = 'flex';
+                showLoginForm();
+            }
+        }
+        
+        function closeAuthModal() {
+            document.getElementById('auth-modal').style.display = 'none';
+            clearAuthError();
+        }
+        
+        function showLoginForm() {
+            document.getElementById('auth-content').innerHTML = `
+                <h2 style="text-align: center; margin-bottom: 1.5rem; color: #4c1d95;">Welcome to GABE</h2>
+                <form onsubmit="handleLogin(event)">
+                    <div style="margin-bottom: 1rem;">
+                        <input type="email" id="login-email" placeholder="Email" required 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 1rem;">
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <input type="password" id="login-password" placeholder="Password" required 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 1rem;">
+                    </div>
+                    <button type="submit" style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">
+                        Sign In
+                    </button>
+                </form>
+                <div id="auth-error" style="color: #dc2626; text-align: center; margin-bottom: 1rem; display: none;"></div>
+                <p style="text-align: center; color: #64748b;">
+                    Don't have an account? 
+                    <a href="#" onclick="showRegisterForm()" style="color: #8B5CF6; text-decoration: none;">Sign up</a>
+                </p>
+                <p style="text-align: center; margin-top: 1rem;">
+                    <a href="#" onclick="continueWithoutAccount()" style="color: #64748b; text-decoration: none; font-size: 0.9rem;">Continue without account</a>
+                </p>
+            `;
+        }
+        
+        function showRegisterForm() {
+            document.getElementById('auth-content').innerHTML = `
+                <h2 style="text-align: center; margin-bottom: 1.5rem; color: #4c1d95;">Join GABE</h2>
+                <form onsubmit="handleRegister(event)">
+                    <div style="margin-bottom: 1rem;">
+                        <input type="text" id="register-name" placeholder="Your Name" required 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 1rem;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <input type="email" id="register-email" placeholder="Email" required 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 1rem;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <select id="register-age" required 
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 1rem;">
+                            <option value="">Select Age Range</option>
+                            <option value="teen">Teen (13-17)</option>
+                            <option value="young_adult">Young Adult (18-29)</option>
+                            <option value="adult">Adult (30-59)</option>
+                            <option value="senior">Senior (60+)</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <input type="password" id="register-password" placeholder="Password" required 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 1rem;">
+                    </div>
+                    <button type="submit" style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">
+                        Create Account
+                    </button>
+                </form>
+                <div id="auth-error" style="color: #dc2626; text-align: center; margin-bottom: 1rem; display: none;"></div>
+                <p style="text-align: center; color: #64748b;">
+                    Already have an account? 
+                    <a href="#" onclick="showLoginForm()" style="color: #8B5CF6; text-decoration: none;">Sign in</a>
+                </p>
+            `;
+        }
+        
+        function continueWithoutAccount() {
+            // Start chat without authentication
+            closeAuthModal();
+            showChat();
+        }
+        
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            fetch('/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.authenticatedUser = data.user;
+                    closeAuthModal();
+                    if (window.gabeApp) {
+                        window.gabeApp.userName = data.user.name;
+                        window.gabeApp.userAgeRange = data.user.age_range;
+                        window.gabeApp.userState.name = data.user.name;
+                        window.gabeApp.userState.ageGroup = data.user.age_range;
+                        window.gabeApp.userState.conversationStage = "chat";
+                        window.gabeApp.showChat();
+                    }
+                } else {
+                    showAuthError(data.message);
+                }
+            })
+            .catch(error => {
+                showAuthError('Login failed. Please try again.');
+            });
+        }
+        
+        function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const age_range = document.getElementById('register-age').value;
+            const password = document.getElementById('register-password').value;
+            
+            fetch('/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, age_range, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.authenticatedUser = data.user;
+                    closeAuthModal();
+                    if (window.gabeApp) {
+                        window.gabeApp.userName = data.user.name;
+                        window.gabeApp.userAgeRange = data.user.age_range;
+                        window.gabeApp.userState.name = data.user.name;
+                        window.gabeApp.userState.ageGroup = data.user.age_range;
+                        window.gabeApp.userState.conversationStage = "chat";
+                        window.gabeApp.showChat();
+                    }
+                } else {
+                    showAuthError(data.message);
+                }
+            })
+            .catch(error => {
+                showAuthError('Registration failed. Please try again.');
+            });
+        }
+        
+        function showAuthError(message) {
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+        
+        function clearAuthError() {
+            const errorDiv = document.getElementById('auth-error');
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+            }
+        }
+        
+        function showLanding() {
+            document.getElementById('chat-container').style.display = 'none';
+            document.getElementById('landing-page').style.display = 'flex';
+        }
+
+        // Global functions for spiritual features
+        function openDevotion() {
+            if (window.gameFeatures) {
+                window.gameFeatures.openDevotion();
+            }
+        }
+
+        function openPrayerManager() {
+            if (window.gameFeatures) {
+                window.gameFeatures.openPrayerManager();
+            }
+        }
+
+        function openBibleReading() {
+            if (window.gameFeatures) {
+                window.gameFeatures.openBibleReading();
+            }
+        }
+
+        function loadUserProgress() {
+            if (window.gameFeatures) {
+                window.gameFeatures.loadUserProgress();
+            }
+        }
+
+        function openGamifiedFeatures() {
+            if (window.gameFeatures) {
+                window.gameFeatures.openGamifiedFeatures();
+            }
+        }
+
+        function openPrayerArena() {
+            if (window.gameFeatures) {
+                window.gameFeatures.openPrayerArena();
+            }
+        }
+
+        // Core app functions
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            if (window.gabeApp) {
+                window.gabeApp.sendMessage();
+            }
+        }
+
+        // Update devotion button text based on time of day
+        function updateDevotionButtonTime() {
+            const currentHour = new Date().getHours();
+            const isMorning = currentHour >= 5 && currentHour < 14;
+            
+            const devotionButtonText = document.getElementById('devotion-button-text');
+            const devotionIcon = document.querySelector('.devotion-btn .feature-icon');
+            
+            if (devotionButtonText) {
+                devotionButtonText.textContent = isMorning ? 'Morning Devotion' : 'Evening Devotion';
+            }
+            
+            if (devotionIcon) {
+                devotionIcon.textContent = isMorning ? '🌅' : '🌙';
+            }
+        }
+        
+        // Update on page load and periodically
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(updateDevotionButtonTime, 500);
+            // Update every hour in case page stays open across time boundaries
+            setInterval(updateDevotionButtonTime, 3600000);
+        });
+    </script>
+</body>
+</html>
