@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard</title>
-</head>
-<body>
-    <h2>Welcome, {{ user.username }}!</h2>
-    <p>You are logged in.</p>
-    <a href="/logout">Logout</a>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Dashboard - GABE{% endblock %}
+
+{% block content %}
+  <h2>Welcome, {{ current_user.username }}!</h2>
+  <p>This is your spiritual dashboard. Track your growth, earn XP, and connect with GABE.</p>
+  <a href="{{ url_for('main.start_faith_journey') }}">Start Faith Journey</a>
+{% endblock %}
