@@ -1,10 +1,7 @@
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-
-# Create db instance here
-db = SQLAlchemy()
+from gabe_app import db  # ✅ this works because db is initialized in __init__.py
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
