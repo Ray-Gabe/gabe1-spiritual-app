@@ -1,15 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register - GABE</title>
-</head>
-<body>
-    <h2>Register</h2>
-    <form method="POST">
-        <input name="username" type="text" placeholder="Username"><br>
-        <input name="email" type="email" placeholder="Email"><br>
-        <input name="password" type="password" placeholder="Password"><br>
-        <button type="submit">Register</button>
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Register - GABE{% endblock %}
+
+{% block content %}
+  <h2>Create your GABE account</h2>
+  <form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.username.label }} {{ form.username(size=32) }}<br>
+    {{ form.email.label }} {{ form.email(size=32) }}<br>
+    {{ form.password.label }} {{ form.password(size=32) }}<br>
+    {{ form.confirm.label }} {{ form.confirm(size=32) }}<br>
+    {{ form.submit() }}
+  </form>
+{% endblock %}
