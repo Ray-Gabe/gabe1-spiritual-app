@@ -1,0 +1,336 @@
+/* Standalone Spiritual Features Styles */
+
+/* Scripture Standalone Overlay */
+.scripture-standalone-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+.scripture-standalone-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease;
+}
+
+.scripture-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.scripture-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.scripture-verse {
+    font-size: 1.3rem;
+    font-style: italic;
+    margin: 20px 0;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+.scripture-reference {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 15px 0;
+    opacity: 0.9;
+}
+
+.scripture-note {
+    font-size: 1rem;
+    margin: 20px 0;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+.scripture-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.scripture-actions .save-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.scripture-actions .save-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.scripture-actions .save-btn:disabled {
+    background: rgba(76, 175, 80, 0.3);
+    cursor: not-allowed;
+}
+
+.scripture-actions .close-btn {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.scripture-actions .close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.scripture-header .close-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.scripture-header .close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Journal Standalone Overlay */
+.journal-standalone-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+.journal-standalone-card {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.journal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.journal-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.journal-content {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    max-height: 400px;
+}
+
+.journal-summary {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.journal-entry {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.entry-date {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.entry-prayer {
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.entry-response {
+    margin: 10px 0;
+    line-height: 1.5;
+    font-style: italic;
+}
+
+.entry-mood {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-top: 10px;
+}
+
+.journal-loading {
+    text-align: center;
+    padding: 40px;
+}
+
+.journal-loading i {
+    animation: spin 1s linear infinite;
+}
+
+.journal-empty {
+    text-align: center;
+    padding: 40px;
+}
+
+.journal-empty h4 {
+    margin: 15px 0 10px;
+    font-size: 1.2rem;
+}
+
+.journal-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.journal-actions .close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.journal-actions .close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.journal-header .close-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.journal-header .close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .scripture-standalone-card,
+    .journal-standalone-card {
+        margin: 20px;
+        width: calc(100% - 40px);
+        padding: 20px;
+    }
+    
+    .scripture-verse {
+        font-size: 1.1rem;
+    }
+    
+    .scripture-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .scripture-actions .save-btn,
+    .scripture-actions .close-btn {
+        width: 100%;
+        justify-content: center;
+        margin: 5px 0;
+    }
+}
