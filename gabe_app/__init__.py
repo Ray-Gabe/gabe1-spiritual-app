@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from gabe_app.models import User  # 👈 Important
+from gabe_app.models import db, User
 
 db = SQLAlchemy()
 login_manager = LoginManager()
