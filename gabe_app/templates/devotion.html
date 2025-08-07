@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Daily Devotion - GABE{% endblock %}
+
+{% block content %}
+  <h2>🕊️ Today’s Devotion</h2>
+
+  {% if devotion %}
+    <div style="background:#f9f9f9; padding:20px; border-left:5px solid #2563eb; border-radius:8px;">
+      <h3>{{ devotion.title }}</h3>
+      <p><strong>Verse:</strong> {{ devotion.verse }}</p>
+      <p>{{ devotion.body }}</p>
+      <p><em>{{ devotion.date }}</em></p>
+    </div>
+  {% else %}
+    <p>No devotion found for today. Please try again later.</p>
+  {% endif %}
+
+  <br>
+  <a href="/dashboard">⬅ Back to Dashboard</a>
+{% endblock %}
