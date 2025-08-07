@@ -15,7 +15,10 @@ def create_app():
 
     from gabe_app.routes.auth_routes import auth_bp
     app.register_blueprint(auth_bp)
+    
+    from gabe_app.routes.main_routes import main_bp
+    app.register_blueprint(main_bp)
 
-    return app
+return app
 
 
