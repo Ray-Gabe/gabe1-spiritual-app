@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Chat with GABE{% endblock %}
+
+{% block content %}
+  <h2>Talk to GABE</h2>
+  <p>Ask a question, share a thought, or request a prayer. GABE is here to guide and bless.</p>
+
+  <form method="POST" action="/chat">
+    <textarea name="user_input" rows="4" cols="60" placeholder="Type your message here..." required></textarea><br><br>
+    <button type="submit">Send</button>
+  </form>
+
+  {% if response %}
+    <div style="margin-top:20px; padding:15px; background:#f5f5f5; border-radius:8px;">
+      <strong>GABE says:</strong>
+      <p>{{ response }}</p>
+    </div>
+  {% endif %}
+{% endblock %}
