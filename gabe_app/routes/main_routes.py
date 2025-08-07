@@ -6,7 +6,12 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+    # Optional: mock user data for testing
+    user = {
+        'username': 'TestUser',
+        'age_range': '18-30'
+    }
+    return render_template('index.html', user=user)
 
 @main.route('/landing')
 def landing():
