@@ -30,9 +30,23 @@ def register_page():
 def chat_api():
     """Handle chat messages"""
     data = request.get_json()
-    # Simple response for now
+    message = data.get('message', '')
+    name = data.get('name', 'friend')
+    
+    # Simple spiritual responses based on keywords
+    if any(word in message.lower() for word in ['prayer', 'pray']):
+        response = f"Let's pray together, {name}. What's on your heart that we can bring to God?"
+    elif any(word in message.lower() for word in ['bible', 'scripture', 'verse']):
+        response = f"The Bible is full of wisdom! Here's a verse for you: 'Trust in the Lord with all your heart.' - Proverbs 3:5"
+    elif any(word in message.lower() for word in ['sad', 'worried', 'anxious']):
+        response = f"I understand you're going through a tough time, {name}. Remember, 'Cast all your anxiety on Him because He cares for you.' - 1 Peter 5:7"
+    elif any(word in message.lower() for word in ['thank', 'grateful', 'blessed']):
+        response = f"Gratitude is beautiful, {name}! 'Give thanks in all circumstances.' - 1 Thessalonians 5:18"
+    else:
+        response = f"I'm here to walk alongside you in faith, {name}. How can I help you grow spiritually today?"
+    
     return jsonify({
-        'response': f"Hello {data.get('name', 'friend')}! I'm GABE, your spiritual companion. How can I help you today?",
+        'response': response,
         'mood': 'hopeful'
     })
 
