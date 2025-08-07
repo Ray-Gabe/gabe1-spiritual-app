@@ -153,7 +153,7 @@
     </style>
 </head>
 <body>
-    <a href="{{ url_for('index') }}" class="back-link">← Back to Home</a>
+    <a href="{{ url_for('main.index') }}" class="back-link">← Back to Home</a>
     
     <div class="auth-container">
         <div class="auth-card">
@@ -163,15 +163,15 @@
                 <p class="auth-subtitle">Sign in to continue your spiritual journey</p>
             </div>
             
-            {% with messages = get_flashed_messages() %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
-                    <div class="alert alert-danger">
-                        {{ messages[0] }}
-                    </div>
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
                 {% endif %}
             {% endwith %}
             
-            <form method="POST" action="{{ url_for('login') }}">
+            <form method="POST" action="{{ url_for('auth.login') }}">
                 <div class="form-group">
                     <label for="username" class="form-label">Username</label>
                     <input type="text" class="form-control" id="username" name="username" required>
@@ -186,7 +186,7 @@
             </form>
             
             <div class="auth-link">
-                Don't have an account? <a href="{{ url_for('register') }}">Create one here</a>
+                Don't have an account? <a href="{{ url_for('auth.register') }}">Create one here</a>
             </div>
         </div>
     </div>
