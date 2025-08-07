@@ -1,18 +1,85 @@
 # gabe_app/routes/main_routes.py
+from flask import Blueprint, render_template, jsonify, request
 
-from flask import Blueprint, render_template
+main_bp = Blueprint('main', __name__)
 
-main = Blueprint('main', __name__)
-
-@main.route('/')
+@main_bp.route('/')
 def index():
-    # Optional: mock user data for testing
+    """Serve the beautiful main app page"""
+    # Mock authenticated user to bypass login for now
     user = {
-        'username': 'TestUser',
-        'age_range': '18-30'
+        'name': 'Guest User',
+        'username': 'guest',
+        'age_range': '18-30',
+        'authenticated': True
     }
-    return render_template('index.html', user=user)
+    return render_template('index.html', user=user, authenticated_user=user)
 
-@main.route('/landing')
-def landing():
-    return render_template('landing.html')
+@main_bp.route('/login')
+def login_page():
+    """Serve basic login page as fallback"""
+    return render_template('login.html')
+
+@main_bp.route('/register') 
+def register_page():
+    """Serve basic register page as fallback"""
+    return render_template('register.html')
+
+# API routes for the spiritual features
+@main_bp.route('/api/chat', methods=['POST'])
+def chat_api():
+    """Handle chat messages"""
+    data = request.get_json()
+    # Simple response for now
+    return jsonify({
+        'response': f"Hello {data.get('name', 'friend')}! I'm GABE, your spiritual companion. How can I help you today?",
+        'mood': 'hopeful'
+    })
+
+@main_bp.route('/api/gamified/daily_devotion')
+def daily_devotion():
+    """Serve daily devotion content"""
+    return jsonify({
+        'type': 'new_devotion',
+        'devotion': {
+            'title': 'Morning Power-Up',
+            'greeting': 'Good morning, faith warrior!',
+            'verse_text': 'I can do all things through Christ who strengthens me.',
+            'verse_reference': 'Philippians 4:13',
+            'epic_story': 'Today is your day to shine for God! Every challenge is an opportunity to show His power.',
+            'mission': 'Find one way to encourage someone today and watch God work through you.',
+            'power_prayer': 'Lord, fill me with Your strength and love. Help me be a light in someone\'s life today.',
+            'closing': 'You are God\'s masterpiece, created for good works!'
+        }
+    })
+
+@main_bp.route('/api/gamified/complete_devotion', methods=['POST'])
+def complete_devotion():
+    """Handle devotion completion"""
+    return jsonify({
+        'success': True,
+        'xp_earned': 2,
+        'message': 'Devotion completed! God is pleased with your dedication.',
+        'new_level': False,
+        'streak': 1
+    })
+
+@main_bp.route('/api/drop_of_hope')
+def drop_of_hope():
+    """Serve rotating Bible verses"""
+    verses = [
+        {
+            'verse': 'Be strong and courageous! Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.',
+            'reference': 'Joshua 1:9'
+        },
+        {
+            'verse': 'For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you.',
+            'reference': 'Jeremiah 29:11'
+        },
+        {
+            'verse': 'Cast all your anxiety on him because he cares for you.',
+            'reference': '1 Peter 5:7'
+        }
+    ]
+    import random
+    return jsonify(random.choice(verses))
