@@ -1,17 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}Welcome to GABE{% endblock %}
+{% block title %}My GABE Dashboard{% endblock %}
 
 {% block content %}
-  <section class="hero">
-    <h2>Because even prayers start with a conversation</h2>
-    {% if current_user.is_authenticated %}
-      <p>Welcome back, {{ current_user.username }}!</p>
-      <a href="{{ url_for('main.dashboard') }}">Go to Dashboard</a>
-    {% else %}
-      <p>Let’s begin your journey with GABE.</p>
-      <a href="{{ url_for('auth.login') }}">Login</a> or 
-      <a href="{{ url_for('auth.register') }}">Register</a>
-    {% endif %}
-  </section>
+  <h2>Welcome to your GABE Dashboard</h2>
+  
+  {% if current_user.is_authenticated %}
+    <p>Hello, {{ current_user.username }}!</p>
+    <p>Your current XP: {{ current_user.xp or 0 }}</p>
+    <p>Your level: {{ current_user.level or "Seed" }}</p>
+
+    <div style="margin-top: 20px;">
+      <a href="/chat">💬 Chat with GABE</a><br>
+      <a href="/devotion">📖 Daily Devotion</a><br>
+      <a href="/games">🎮 Faith in Action Games</a><br>
+      <a href="/logout">🔓 Logout</a>
+    </div>
+  
+  {% else %}
+    <p>Please <a href="{{ url_for('auth.login') }}">log in</a> to see your dashboard.</p>
+  {% endif %}
 {% endblock %}
