@@ -1,5 +1,7 @@
+# gabe_app/__init__.py
+
 from flask import Flask
-from gabe_app.extensions import db  # ✅ pull from extensions
+from gabe_app.extensions import db  # ✅ pull db from extensions
 
 def create_app():
     app = Flask(__name__)
