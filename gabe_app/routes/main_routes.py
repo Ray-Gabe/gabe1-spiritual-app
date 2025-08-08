@@ -1,12 +1,11 @@
 # gabe_app/routes/main_routes.py
+
 from flask import Blueprint, render_template, jsonify, request
 
-main_bp = Blueprint('main', __name__)
+main = Blueprint('main', __name__)  # ✅ Unified name for the blueprint
 
-@main_bp.route('/')
+@main.route('/')
 def index():
-    """Serve the beautiful main app page"""
-    # Mock authenticated user to bypass login for now
     user = {
         'name': 'Guest User',
         'username': 'guest',
@@ -15,18 +14,18 @@ def index():
     }
     return render_template('index.html', user=user, authenticated_user=user)
 
-@main_bp.route('/login')
+@main.route('/login')
 def login_page():
     """Serve basic login page as fallback"""
     return render_template('login.html')
 
-@main_bp.route('/register') 
+@main.route('/register') 
 def register_page():
     """Serve basic register page as fallback"""
     return render_template('register.html')
 
 # API routes for the spiritual features
-@main_bp.route('/api/chat', methods=['POST'])
+@main.route('/api/chat', methods=['POST'])
 def chat_api():
     """Handle chat messages"""
     data = request.get_json()
@@ -50,7 +49,7 @@ def chat_api():
         'mood': 'hopeful'
     })
 
-@main_bp.route('/api/gamified/daily_devotion')
+@main.route('/api/gamified/daily_devotion')
 def daily_devotion():
     """Serve daily devotion content"""
     return jsonify({
@@ -67,7 +66,7 @@ def daily_devotion():
         }
     })
 
-@main_bp.route('/api/gamified/complete_devotion', methods=['POST'])
+@main.route('/api/gamified/complete_devotion', methods=['POST'])
 def complete_devotion():
     """Handle devotion completion"""
     return jsonify({
@@ -78,7 +77,7 @@ def complete_devotion():
         'streak': 1
     })
 
-@main_bp.route('/api/drop_of_hope')
+@main.route('/api/drop_of_hope')
 def drop_of_hope():
     """Serve rotating Bible verses"""
     verses = [
@@ -97,3 +96,4 @@ def drop_of_hope():
     ]
     import random
     return jsonify(random.choice(verses))
+
