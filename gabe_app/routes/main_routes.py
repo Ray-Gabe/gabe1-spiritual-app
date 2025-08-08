@@ -1,10 +1,14 @@
 # gabe_app/routes/main_routes.py
 
-from flask import Blueprint, render_template, jsonify, request
+from flask import Blueprint, render_template
 
-main = Blueprint('main', __name__)  # ✅ Unified name for the blueprint
+main = Blueprint('main', __name__)
 
 @main.route('/')
+def landing():
+    return render_template('landing.html')
+
+@main.route('/index')
 def index():
     user = {
         'name': 'Guest User',
