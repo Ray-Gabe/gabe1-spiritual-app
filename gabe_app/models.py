@@ -1,7 +1,9 @@
-from flask_login import UserMixin
+# gabe_app/models.py
+
 from datetime import datetime
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from gabe_app.extensions import db  # ✅ pull from extensions instead of __init__
+from gabe_app.extensions import db  # ✅ CORRECT now
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
